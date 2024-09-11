@@ -1,14 +1,10 @@
-import {Route, Switch, Redirect} from 'react-router-dom'
+import {Route, Switch} from 'react-router-dom'
 
 import {Component} from 'react'
 
-import LoginForm from './components/LoginForm'
 import Home from './components/Home'
-import NotFound from './components/NotFound'
-import AllJobs from './components/AllJobs'
-import ProtectedRoute from './components/ProtectedRoute'
-import AboutJobItem from './components/AboutJobItem'
-import ApplicationForm from './components/ApplicationForm'
+import Jobs from './components/Jobs'
+import Bookmarks from './components/Bookmarks'
 
 import CreateContext from './Context/CreatContext'
 
@@ -33,18 +29,9 @@ class App extends Component {
         }}
       >
         <Switch>
-          <Route exact path="/login" component={LoginForm} />
-          <ProtectedRoute exact path="/" component={Home} />
-          <ProtectedRoute exact path="/jobs" component={AllJobs} />
-          <ProtectedRoute exact path="/jobs/:id" component={AboutJobItem} />
-          <ProtectedRoute
-            exact
-            path="/application-form"
-            component={ApplicationForm}
-          />
-
-          <Route path="/not-found" component={NotFound} />
-          <Redirect to="not-found" />
+          <Route exact path="/" component={Home} />
+          <Route exact path="/jobs" component={Jobs} />
+          <Route exact path="/bookmarks" component={Bookmarks} />
         </Switch>
       </CreateContext.Provider>
     )
@@ -52,45 +39,3 @@ class App extends Component {
 }
 
 export default App
-
-/*
-// These are the lists used in the application. You can move them to any component needed.
-const employmentTypesList = [
-  {
-    label: 'Full Time',
-    employmentTypeId: 'FULLTIME',
-  },
-  {
-    label: 'Part Time',
-    employmentTypeId: 'PARTTIME',
-  },
-  {
-    label: 'Freelance',
-    employmentTypeId: 'FREELANCE',
-  },
-  {
-    label: 'Internship',
-    employmentTypeId: 'INTERNSHIP',
-  },
-]
-
-const salaryRangesList = [
-  {
-    salaryRangeId: '1000000',
-    label: '10 LPA and above',
-  },
-  {
-    salaryRangeId: '2000000',
-    label: '20 LPA and above',
-  },
-  {
-    salaryRangeId: '3000000',
-    label: '30 LPA and above',
-  },
-  {
-    salaryRangeId: '4000000',
-    label: '40 LPA and above',
-  },
-]
-
-*/
