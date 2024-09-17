@@ -19,6 +19,16 @@ const Header = () => (
               alt="website logo"
             />
           </Link>
+
+          <li className="nav-menu-item-mobile-home">
+            <Link to="/" className="nav-link-home">
+              <img
+                src="https://assets.ccbp.in/frontend/react-js/nxt-trendz-home-icon.png"
+                alt="nav home"
+                className="nav-bar-home-img"
+              />
+            </Link>
+          </li>
         </div>
 
         <div className="nav-bar-large-container">
@@ -31,12 +41,6 @@ const Header = () => (
           </Link>
           <ul className="nav-menu">
             <li className="nav-menu-item">
-              <Link to="/" className="nav-link">
-                Home
-              </Link>
-            </li>
-
-            <li className="nav-menu-item">
               <Link to="/jobs" className="nav-link">
                 Jobs
               </Link>
@@ -48,20 +52,17 @@ const Header = () => (
               </Link>
             </li>
           </ul>
+          <ul className="nav-menu-home">
+            <li className="nav-menu-item">
+              <Link to="/" className="nav-link-home">
+                Home
+              </Link>
+            </li>
+          </ul>
         </div>
       </div>
       <div className="nav-menu-mobile">
         <ul className="nav-menu-list-mobile">
-          <li className="nav-menu-item-mobile">
-            <Link to="/" className="nav-link">
-              <img
-                src="https://assets.ccbp.in/frontend/react-js/nxt-trendz-home-icon.png"
-                alt="nav home"
-                className="nav-bar-img"
-              />
-            </Link>
-          </li>
-
           <li className="nav-menu-item-mobile">
             <Link to="/jobs" className="nav-link">
               <RiFileSearchLine className="nav-bar-icon" />

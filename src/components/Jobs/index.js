@@ -1,106 +1,170 @@
-import {useState, useEffect} from 'react'
+import {Component} from 'react'
+import {Link} from 'react-router-dom'
 import Loader from 'react-loader-spinner'
-
-import Header from '../Header'
+import {IoIosArrowBack, IoIosArrowForward} from 'react-icons/io'
 import JobsView from '../JobsView'
+import Header from '../Header'
 
 import './index.css'
 
-const apiStatusConstants = {
+const apiJobStatusConstants = {
   initial: 'INITIAL',
-  inProgress: 'IN_PROGRESS',
   success: 'SUCCESS',
   failure: 'FAILURE',
+  inProgress: 'IN_PROGRESS',
 }
 
-const Products = () => {
-  const [apiResponse, setApiResponse] = useState({
-    status: apiStatusConstants.initial,
-    data: null,
-    errorMsg: null,
-  })
+class AllJobs extends Component {
+  state = {
+    jobsData: [],
+    apiJobStatus: apiJobStatusConstants.initial,
+    activePage: 1,
+  }
 
-  const getJobsData = async () => {
-    setApiResponse({
-      status: apiStatusConstants.inProgress,
-      data: null,
-      errorMsg: null,
-    })
-
-    const url = 'https://testapi.getlokalapp.com/common/jobs?page=1'
-
-    const response = await fetch(url)
-    if (response.ok === true) {
-      const fetchedData = await response.json()
-      const {results} = fetchedData
-      const updatedData = {
-        id: results.id,
-        title: results.title,
-      }
-      console.log(updatedData)
-      setApiResponse(prevApiDetails => ({
-        ...prevApiDetails,
-        status: apiStatusConstants.success,
-        data: results,
-      }))
-    } else {
-      setApiResponse(prevApiDetails => ({
-        ...prevApiDetails,
-        status: apiStatusConstants.failure,
-        errorMsg: 'We cannot find any jobs',
-      }))
+  onClickLeftArrow = () => {
+    const {activePage} = this.state
+    if (activePage > 1) {
+      this.setState(
+        prevState => ({
+          activePage: prevState.activePage - 1,
+        }),
+        this.onGetJobDetails,
+      )
     }
   }
 
-  const renderSuccessView = () => {
-    const {data} = apiResponse
-    return (
-      <>
-        <ul>
-          {data.map(eachData => (
-            <JobsView key={eachData.id} jobsData={eachData} />
-          ))}
-        </ul>
-      </>
-    )
+  onClickRightArrow = () => {
+    const {activePage} = this.state
+    if (activePage < 3) {
+      this.setState(
+        prevState => ({
+          activePage: prevState.activePage + 1,
+        }),
+        this.onGetJobDetails,
+      )
+    }
   }
 
-  useEffect(() => {
-    getJobsData()
-  }, [])
-
-  const renderFailureView = () => {
-    const {errorMsg} = apiResponse
-    return <p>{errorMsg}</p>
+  onGetJobDetails = async () => {
+    const {activePage} = this.state
+    this.setState({apiJobStatus: apiJobStatusConstants.inProgress})
+    const jobsApiUrl = ` https://testapi.getlokalapp.com/common/jobs?page=${activePage}`
+    const responseJobs = await fetch(jobsApiUrl)
+    if (responseJobs.ok === true) {
+      const fetchedDataJobs = await responseJobs.json()
+      const jobsData = fetchedDataJobs.results
+      const updatedDataJobs = jobsData.map(eachItem => ({
+        companyName: eachItem.company_name,
+        jobCategory: eachItem.job_category,
+        id: eachItem.id,
+        jobDescription: eachItem.title,
+        type: eachItem.type,
+        location: eachItem.job_location_slug,
+        salary: eachItem.salary_max,
+        contact: eachItem.custom_link,
+      }))
+      this.setState({
+        jobsData: updatedDataJobs,
+        apiJobStatus: apiJobStatusConstants.success,
+      })
+    } else {
+      this.setState({apiJobStatus: apiJobStatusConstants.failure})
+    }
   }
 
-  const renderLoadingView = () => (
-    <div className="loading-div">
-      <Loader type="ThreeDots" color="#ffffff" height="50" width="50" />{' '}
+  componentDidMount = () => {
+    this.onGetJobDetails()
+  }
+
+  onGetJobFailureView = () => (
+    <>
+      <div>
+        <img
+          src="https://assets.ccbp.in/frontend/react-js/failure-img.png"
+          alt="no jobs found"
+        />
+      </div>
+    </>
+  )
+
+  renderLoadingView = () => (
+    <div className="loader-container" data-testid="loader">
+      <Loader type="ThreeDots" color="#0b69ff" height="50" width="50" />{' '}
     </div>
   )
 
-  const renderProducts = () => {
-    const {status} = apiResponse
+  onRetryJobs = () => {
+    this.onGetJobDetails()
+  }
 
-    switch (status) {
-      case apiStatusConstants.inProgress:
-        return renderLoadingView()
-      case apiStatusConstants.success:
-        return renderSuccessView()
-      case apiStatusConstants.failure:
-        return renderFailureView()
+  onGetJobsView = () => {
+    const {jobsData} = this.state
+    const noJobs = jobsData.length === 0
+    const {activePage} = this.state
+    return noJobs ? (
+      <div className="no-jobs-container">
+        <img
+          className="no-jobs-img"
+          src="https://assets.ccbp.in/frontend/react-js/no-jobs-img.png"
+          alt="no jobs"
+        />
+        <h1>No jobs found</h1>
+        <p>We cannot find any jobs try another filters</p>
+        <Link to="/">
+          <button type="button" className="retry-btn">
+            Retry
+          </button>
+        </Link>
+      </div>
+    ) : (
+      <ul className="ul-job-items-container">
+        {jobsData.map(eachItem => (
+          <JobsView key={eachItem.id} jobData={eachItem} />
+        ))}
+        <div className="arrow-container">
+          <button
+            type="button"
+            className="arrow-controller-button"
+            onClick={this.onClickLeftArrow}
+          >
+            <IoIosArrowBack color="#52606D" size={12} />
+          </button>
+          <p className="arrow-num">{activePage}</p>
+          <button
+            type="button"
+            className="arrow-controller-button"
+            onClick={this.onClickRightArrow}
+          >
+            <IoIosArrowForward color="#52606D" size={12} />
+          </button>
+        </div>
+      </ul>
+    )
+  }
+
+  onRenderJobStatus = () => {
+    const {apiJobStatus} = this.state
+
+    switch (apiJobStatus) {
+      case apiJobStatusConstants.success:
+        return this.onGetJobsView()
+      case apiJobStatusConstants.failure:
+        return this.onGetJobFailureView()
+      case apiJobStatusConstants.inProgress:
+        return this.renderLoadingView()
       default:
         return null
     }
   }
 
-  return (
-    <>
-      <Header />
-      <div className="jobs-main-div">{renderProducts()}</div>
-    </>
-  )
+  render() {
+    return (
+      <>
+        <Header />
+        <div className="jobs-main-div">{this.onRenderJobStatus()}</div>
+      </>
+    )
+  }
 }
 
-export default Products
+export default AllJobs

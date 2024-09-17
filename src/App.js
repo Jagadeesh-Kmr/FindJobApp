@@ -4,6 +4,7 @@ import {Component} from 'react'
 
 import Home from './components/Home'
 import Jobs from './components/Jobs'
+import JobDetailView from './components/JobDetailView'
 import Bookmarks from './components/Bookmarks'
 
 import CreateContext from './Context/CreatContext'
@@ -31,6 +32,7 @@ class App extends Component {
         <Switch>
           <Route exact path="/" component={Home} />
           <Route exact path="/jobs" component={Jobs} />
+          <Route exact path="/jobDetailView/:id" component={JobDetailView} />
           <Route exact path="/bookmarks" component={Bookmarks} />
         </Switch>
       </CreateContext.Provider>

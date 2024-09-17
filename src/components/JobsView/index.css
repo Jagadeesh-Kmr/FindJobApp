@@ -2,9 +2,14 @@
   list-style: none;
   background-color: #272727;
   border-radius: 10px;
-  margin-bottom: 20px;
+  margin: 40px 0px 20px 0px;
   padding: 20px;
   font-family: 'Roboto';
+  color: #ffffff;
+}
+
+.jbv-link {
+  text-decoration: none;
   color: #ffffff;
 }
 
@@ -35,19 +40,19 @@
   margin-bottom: 0px;
 }
 
-.star-rating-container {
+.contact-container {
   display: flex;
   margin-top: 0px;
 }
 
-.star-icon {
-  color: #fbbf24;
+.contact-icon {
+  color: #59c738;
   font-size: 20px;
   margin-left: 5px;
 }
 
 .lpa {
-  width: 70px;
+  width: 100px;
 }
 
 .rating-text {
@@ -85,7 +90,7 @@
 }
 
 .job-type {
-  margin-top: 60px;
+  margin-top: 0px;
 }
 
 .package {
@@ -102,7 +107,9 @@
 
 @media screen and (max-width: 767px) {
   .job-item-container {
-    width: 90%;
+    width: 94%;
+    margin-left: 0px;
+    padding-right: 20px;
   }
 
   .title-heading {
@@ -123,16 +130,26 @@
 
   .location-icon-container {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    margin-right: 20px;
+    margin-right: 10px;
   }
 
   .package {
-    width: 70px;
-    margin-right: 20px;
+    width: 60px;
   }
 
   .description-para {
     width: 70%;
+  }
+
+  .lpa {
+    width: 40px;
+  }
+
+  .job-type {
+    font-size: 15px;
+    width: 100px;
+    margin-right: 20px;
   }
 }
